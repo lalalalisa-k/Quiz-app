@@ -12,7 +12,8 @@ const answersContainer = document.getElementById('answers-container');
 const start = document.getElementById('start-button');
 const acceptingAnswers = true;
 
-let countNum = 0;
+let currentNum = 0;
+let isAnswered;
 let questionCounter = 0;
 //let quizCount = count + 1;
 let score = 0;
@@ -86,12 +87,26 @@ const getNewQuestion = (quizInstance, index) => {
 
 };
 
+const shuffle = (arr) => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[j], arr[i]] = [arr[i], arr[j]];
+  }
+  return arr;
+}
+
+const checkAnswer = () => {
+  if (isAnswered) {
+    return;
+  }
+  isAnswered = true;
+
+}
+
 const setQuiz = (quizInstance, index) => {
   const quizzListContainer = document.getElementById('quiz-list');
   const fragment = document.createDocumentFragment();
   const answerLabel = document.getElementById('answers-container');
-
-  const quizArray = quizInstance.quizzes;
 
   quizNumber.innerHTML = `問題${index}`;
   quizGenre.innerHTML = `[ジャンル]${quizInstance.getQuizCategory(1)}`;
@@ -103,7 +118,7 @@ const setQuiz = (quizInstance, index) => {
   quizOptions.push(quizInstance.getCorrectanswer(1));
   quizOptions.push(...quizInstance.getIncorrectanswers(1));
 
-
+  isAnswered = false;
 
   Object.keys(quizOptions).forEach(function (key) {
     const btnContainer = document.createElement("p");
@@ -120,7 +135,6 @@ const setQuiz = (quizInstance, index) => {
       {
         console.log('correct!!! your score is ' + score);
         console.log(quizInstance.getCorrectanswer(1));
-        console.log(optionBtn.innerHTML);
         score++;
       } else
       {
@@ -129,13 +143,12 @@ const setQuiz = (quizInstance, index) => {
     })
   })
 
-
-  console.log(quizInstance);
-  console.log(quizInstance.quizzes);
-  console.log("[問題]" + quizInstance.getNumOfQuiz(1));
-  console.log(quizInstance.getCorrectanswer(1));
-  console.log(quizInstance.getIncorrectanswers(1));
-  console.log(quizArray);
+//  console.log(quizInstance);
+//  console.log(quizInstance.quizzes);
+//  console.log("[問題]" + quizInstance.getNumOfQuiz(1));
+//  console.log(quizInstance.getCorrectanswer(1));
+//  console.log(quizInstance.getIncorrectanswers(1));
+//  console.log(quizArray);
   console.log(quizOptions);
 
 }
