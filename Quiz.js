@@ -8,7 +8,7 @@ const table = document.createElement('table');
 const quizOptionsContainer = document.getElementById('answers-container');
 const loader = document.getElementById('loader-message');
 const title = document.getElementById('title-message');
-const answersContainer = document.getElementById('answers-container');
+//const answersContainer = document.getElementById('answers-container');
 const start = document.getElementById('start-button');
 const acceptingAnswers = true;
 
@@ -28,7 +28,7 @@ class Quiz {
   }
 
   getNumOfQuiz(index) {
-    return this.quizzes[index - 1];
+    return this.quizzes.length[index - 1];
   }
 
   getQuizCategory(index) {
@@ -59,13 +59,13 @@ start.addEventListener('click', (index) => {
       removeLoading();
       return response.json();
     })
-    .then((data) => {
+    .then((data, index) => {
       const quizInstance = new Quiz(data);
-      getNewQuestion(quizInstance, index);
+      //getNewQuestion(quizInstance, index);
       setQuiz(quizInstance, index);
     })
     .catch((e) => {
-      console.log(e) //エラー
+      console.log(e)
     })
 });
 
@@ -86,28 +86,32 @@ const getNewQuestion = (quizInstance, index) => {
   setQuiz(quizInstance, index);
 
 };
+/*
+const checkAnswer = (quizInstance,optionBtn) => {
+  if (optionBtn.innerHTML = quizInstance.getCorrectanswer(1)){
+    optionBtn.classList.add('correct');
+  } else{
+    optionBtn.classList.add('wrong');
+  }
+
+//  if (isAnswered) {
+//    return;
+//  }
+//  isAnswered = true;
+} */
 
 const shuffle = (arr) => {
-  for (let i = arr.length - 1; i > 0; i--) {
+  for (let i = arr.length - 1; i > 0; i--)
+  {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[j], arr[i]] = [arr[i], arr[j]];
   }
   return arr;
 }
 
-const checkAnswer = () => {
-  if (isAnswered) {
-    return;
-  }
-  isAnswered = true;
-
-}
-
-const setQuiz = (quizInstance, index) => {
-  const quizzListContainer = document.getElementById('quiz-list');
-  const fragment = document.createDocumentFragment();
+const setQuiz = (quizInstance, index, currentNum) => {
   const answerLabel = document.getElementById('answers-container');
-
+  //quizNumber.innerHTML = `問題${quizInstance.getNumOfQuiz(1)}`;
   quizNumber.innerHTML = `問題${index}`;
   quizGenre.innerHTML = `[ジャンル]${quizInstance.getQuizCategory(1)}`;
   quizDifficulty.innerHTML = `[難易度]${quizInstance.getQuizDifficulty(1)}`;
@@ -119,37 +123,43 @@ const setQuiz = (quizInstance, index) => {
   quizOptions.push(...quizInstance.getIncorrectanswers(1));
 
   isAnswered = false;
+  const shuffledChoices = shuffle(quizOptions);
 
-  Object.keys(quizOptions).forEach(function (key) {
+  Object.keys(shuffledChoices).forEach(function (key, i) {
     const btnContainer = document.createElement("p");
     answerLabel.appendChild(btnContainer);
-
     const optionBtn = document.createElement("button");
     btnContainer.appendChild(optionBtn);
     optionBtn.innerHTML = quizOptions[key];
-    btnContainer.appendChild(optionBtn);
-    answerLabel.appendChild(btnContainer);
-
-    optionBtn.addEventListener('click', () => {
-      if (optionBtn.innerHTML = quizInstance.getCorrectanswer(1))
+    optionBtn.addEventListener('click', (quizInstance,index) => {
+      //answerLabel.removeChild(btnContainer);
+      //btnContainer.removeChild(optionBtn);
+      //quizOptionsContainer.innerHTML = ''; 
+ 
+      getNewQuestion(quizInstance,index);
+      //checkAnswer(optionBtn);
+      /*
+      if (optionBtn.innerHTML = quizInstance.getCorrectanswer(i))
       {
-        console.log('correct!!! your score is ' + score);
-        console.log(quizInstance.getCorrectanswer(1));
-        score++;
+        optionBtn.classList.add('correct');
       } else
       {
-        console.log('wrong!!!');
-      }
-    })
+        optionBtn.classList.add('wrong');
+      }*/
+      index++;
+    });
+    btnContainer.appendChild(optionBtn);
+    answerLabel.appendChild(btnContainer);
   })
 
-//  console.log(quizInstance);
-//  console.log(quizInstance.quizzes);
-//  console.log("[問題]" + quizInstance.getNumOfQuiz(1));
-//  console.log(quizInstance.getCorrectanswer(1));
-//  console.log(quizInstance.getIncorrectanswers(1));
-//  console.log(quizArray);
-  console.log(quizOptions);
+  console.log(quizInstance);
+  console.log(quizInstance.quizzes);
+  //console.log("ジャンル"+quizInstance.getQuizCategory(1));
+  console.log("[問題]" + index);
+  
+  console.log("正解"+quizInstance.getCorrectanswer(1));
+  console.log(quizInstance.getIncorrectanswers(1));
+  //console.log(quizzess.getNumOfQuiz(1));
 
 }
 
@@ -167,7 +177,7 @@ const finishQuiz = () => {
 
   const returnBtn = document.createElement('button');
   returnBtn.innerText = 'ホームに戻る';
-  answersContainer.appendChild(returnBtn);
+  quizOptionsContainer.appendChild(returnBtn);
   returnBtn.addEventListener('click', () => {
 
   })
