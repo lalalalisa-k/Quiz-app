@@ -8,14 +8,12 @@ const table = document.createElement('table');
 const quizOptionsContainer = document.getElementById('answers-container');
 const loader = document.getElementById('loader-message');
 const title = document.getElementById('title-message');
-//const answersContainer = document.getElementById('answers-container');
 const start = document.getElementById('start-button');
-const acceptingAnswers = true;
 
+const acceptingAnswers = true;
 let currentNum = 0;
 let isAnswered;
 let questionCounter = 0;
-//let quizCount = count + 1;
 let score = 0;
 
 class Quiz {
@@ -26,10 +24,10 @@ class Quiz {
   getQuestion(index) {
     return this.quizzes[index - 1].question;
   }
-
+/*
   getNumOfQuiz(index) {
     return this.quizzes.length[index - 1];
-  }
+  }*/
 
   getQuizCategory(index) {
     return this.quizzes[index - 1].category;
@@ -59,8 +57,8 @@ start.addEventListener('click', (index) => {
       removeLoading();
       return response.json();
     })
-    .then((data, index) => {
-      const quizInstance = new Quiz(data);
+    .then((quizData, index) => {
+      const quizInstance = new Quiz(quizData);
       //getNewQuestion(quizInstance, index);
       setQuiz(quizInstance, index);
     })
@@ -83,8 +81,8 @@ const removeLoading = () => {
 }
 
 const getNewQuestion = (quizInstance, index) => {
+//Object.keys(shuffledChoices).forEach(function (key) {
   setQuiz(quizInstance, index);
-
 };
 /*
 const checkAnswer = (quizInstance,optionBtn) => {
@@ -109,9 +107,8 @@ const shuffle = (arr) => {
   return arr;
 }
 
-const setQuiz = (quizInstance, index, currentNum) => {
+const setQuiz = (quizInstance, index) => {
   const answerLabel = document.getElementById('answers-container');
-  //quizNumber.innerHTML = `問題${quizInstance.getNumOfQuiz(1)}`;
   quizNumber.innerHTML = `問題${index}`;
   quizGenre.innerHTML = `[ジャンル]${quizInstance.getQuizCategory(1)}`;
   quizDifficulty.innerHTML = `[難易度]${quizInstance.getQuizDifficulty(1)}`;
@@ -125,7 +122,7 @@ const setQuiz = (quizInstance, index, currentNum) => {
   isAnswered = false;
   const shuffledChoices = shuffle(quizOptions);
 
-  Object.keys(shuffledChoices).forEach(function (key, i) {
+  Object.keys(shuffledChoices).forEach(function (key) {
     const btnContainer = document.createElement("p");
     answerLabel.appendChild(btnContainer);
     const optionBtn = document.createElement("button");
@@ -154,12 +151,11 @@ const setQuiz = (quizInstance, index, currentNum) => {
 
   console.log(quizInstance);
   console.log(quizInstance.quizzes);
-  //console.log("ジャンル"+quizInstance.getQuizCategory(1));
   console.log("[問題]" + index);
-  
+
   console.log("正解"+quizInstance.getCorrectanswer(1));
   console.log(quizInstance.getIncorrectanswers(1));
-  //console.log(quizzess.getNumOfQuiz(1));
+  console.log(quizzess.getNumOfQuiz(1));
 
 }
 
