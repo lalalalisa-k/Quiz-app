@@ -1,5 +1,5 @@
 'use strict';
-const url = 'https://opentdb.com/api.php?amount=10';
+const URL = 'https://opentdb.com/api.php?amount=10';
 const quizNumber = document.getElementById('question-number');
 const quizGenre = document.getElementById('quiz-genre');
 const quizDifficulty = document.getElementById('quiz-difficulty');
@@ -28,32 +28,38 @@ class Quiz {
     return this.quizzes[index - 1].difficulty;
   }
 
-  getCorrectanswer(index) {
+  getCorrectAnswers(index) {
     return this.quizzes[index - 1].correct_answer;
   }
 
-  getIncorrectanswers(index) {
+  getIncorrectAnswers(index) {
     return this.quizzes[index - 1].incorrect_answers;
   }
 }
+
+const getQuizData = async () => {
+  try
+  {
+    const response = await fetch(URL);
+    const data = await response.json();
+    return data;
+  }
+  catch (err)
+  {
+    console.log(err)
+  }
+}
+getQuizData()
+  .then(quizData => {
+    const quizInstance = new Quiz(quizData);
+    setQuiz(quizInstance, 1);
+})
 
 start.addEventListener('click', () => {
 
   displayLoading();
   start.style.display = "none";
 
-  fetch(url)
-    .then(response => {
-      removeLoading();
-      return response.json();
-    })
-    .then((quizData) => {
-      const quizInstance = new Quiz(quizData);
-      setQuiz(quizInstance, 1);
-    })
-    .catch((e) => {
-      console.log(e)
-    })
 });
 
 const displayLoading = () => {
@@ -101,8 +107,8 @@ const setQuiz = (quizInstance, index) => {
   quizOptionsContainer.innerHTML = '';
 
   const quizOptions = [];
-  quizOptions.push(quizInstance.getCorrectanswer(index));
-  quizOptions.push(...quizInstance.getIncorrectanswers(index));
+  quizOptions.push(quizInstance.getCorrectAnswers(index));
+  quizOptions.push(...quizInstance.getIncorrectAnswers(index));
 
   const shuffledChoices = shuffle(quizOptions);
 
@@ -117,7 +123,7 @@ const setQuiz = (quizInstance, index) => {
       btnContainer.removeChild(optionBtn);
       quizOptionsContainer.innerHTML = '';
 
-      if (optionBtn.innerHTML === quizInstance.getCorrectanswer(index))
+      if (optionBtn.innerHTML === quizInstance.getCorrectAnswers(index))
       {
         score = score + 1;
       }
